@@ -1,4 +1,5 @@
 import requests
+import json
 """ import argparse
 
 parser = argparse.ArgumentParser(description="Script pour les recherches (SIRET, SIRET et CA)") # Instance de argparse
@@ -25,40 +26,48 @@ def search_by_siret(siret):
         response = requests.get(f"{BASE_URL}{siret}", headers=headers)
         response.raise_for_status()  # Vérifie les erreurs HTTP
         data = response.json()  # Convertit la réponse en JSON
-        print("Données récupérées :", data)
+        formatted_data = json.dumps(data, indent=2, sort_keys=True)
+        print("Données récupérées :")
+        print(formatted_data)
     except requests.exceptions.RequestException as e:
         print("Erreur lors de l'appel API :", e)
     return data 
 
 def siret_to_ca(rest_name, code_postal):
-    import requests
-
     # URL de l'API
     BASE_URL = "https://recherche-entreprises.api.gouv.fr/search"
 
     # Paramètres de la requête
     params = {
-        "q": rest_name,                      # Recherche par mot-clé
-        #"categorie_entreprise": "PME,ETI",     # Catégories
-        "code_postal": code_postal,                 # Filtre par code postal
-        #"departement": "42"                    # Filtre par département
+        "q": rest_name,  # Recherche par mot-clé
+        "code_postal": code_postal  # Filtre par code postal
     }
 
     # Clé API (à remplacer par votre clé, si nécessaire)
-    API_KEY = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyIjoiNjczZWY0NmMxY2Y3ODZmOWM0YTE3YjcwIiwidGltZSI6MTczMjE3OTA4NC40MzU3NDI0fQ.9ZKleEb3xVhIxWHiKqUVKiZxQUMfpGa1lfpgkZrMmPjsK8-iSNLPSCK_Wu-tNz_roBrgy04SqTSM2lGSuuMYRg"  # Remplacez par None si la clé n'est pas requise
+    API_KEY = "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyIjoiNjczZWY0NmMxY2Y3ODZmOWM0YTE3YjcwIiwidGltZSI6MTczMjE3OTA4NC40MzU3NDI0fQ.9ZKleEb3xVhIxWHiKqUVKiZxQUMfpGa1lfpgkZrMmPjsK8-iSNLPSCK_Wu-tNz_roBrgy04SqTSM2lGSuuMYRg"
 
     # Headers pour la requête
     headers = {
         "Accept": "application/json",
+        "Authorization": f"Bearer {API_KEY}"  # En-tête avec la clé API
     }
-    if API_KEY:  # Si une clé API est fournie
-        headers["Authorization"] = f"Bearer {API_KEY}"
 
     # Envoi de la requête GET
     try:
         response = requests.get(BASE_URL, headers=headers, params=params)
         response.raise_for_status()  # Vérifie les erreurs HTTP
-        data = response.json()  # Convertit la réponse en JSON
-        print("Données récupérées :", data)
+
+        # Conversion en JSON
+        data = response.json()
+
+        # Affichage formaté du JSON
+        formatted_data = json.dumps(data, indent=2, sort_keys=True)
+        print("Données récupérées :")
+        print(formatted_data)
+
     except requests.exceptions.RequestException as e:
         print("Erreur lors de l'appel API :", e)
+
+
+# Exemple d'appel à la fonction
+search_by_siret("40118227400019")
