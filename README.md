@@ -1,0 +1,1 @@
+A project designed to explore and retrieve restaurant data through the French SIREN number. Using public datasets and APIs, it uncovers essential details about establishments—such as their name, location. 
